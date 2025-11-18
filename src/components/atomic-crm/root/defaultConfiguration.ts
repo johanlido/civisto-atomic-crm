@@ -5,56 +5,87 @@ export const defaultLightModeLogo = "./logos/logo_atomic_crm_light.svg";
 
 export const defaultTitle = "Atomic CRM";
 
+// Civisto-specific company sectors for indoor/outdoor monitoring
 export const defaultCompanySectors = [
-  "Communication Services",
-  "Consumer Discretionary",
-  "Consumer Staples",
-  "Energy",
-  "Financials",
-  "Health Care",
-  "Industrials",
-  "Information Technology",
-  "Materials",
-  "Real Estate",
-  "Utilities",
+  "Hotels & Hospitality",
+  "Office Buildings",
+  "Commercial Real Estate",
+  "Residential Buildings",
+  "Healthcare Facilities",
+  "Educational Institutions",
+  "Municipal & Government",
+  "Retail & Shopping Centers",
+  "Industrial & Manufacturing",
+  "Data Centers",
+  "Sports & Recreation Facilities",
+  "Transportation & Infrastructure",
+  "Cultural & Entertainment Venues",
+  "Co-working Spaces",
+  "Property Management",
+  "Facility Management Services",
+  "Environmental Consulting",
+  "Energy & Utilities",
+  "Construction & Development",
+  "Other",
 ];
 
+// SaaS-focused deal stages
 export const defaultDealStages = [
-  { value: "opportunity", label: "Opportunity" },
+  { value: "lead", label: "Lead" },
+  { value: "qualified", label: "Qualified" },
+  { value: "demo-scheduled", label: "Demo Scheduled" },
+  { value: "demo-completed", label: "Demo Completed" },
   { value: "proposal-sent", label: "Proposal Sent" },
-  { value: "in-negociation", label: "In Negotiation" },
+  { value: "negotiation", label: "Negotiation" },
+  { value: "contract-sent", label: "Contract Sent" },
   { value: "won", label: "Won" },
   { value: "lost", label: "Lost" },
-  { value: "delayed", label: "Delayed" },
+  { value: "on-hold", label: "On Hold" },
 ];
 
 export const defaultDealPipelineStatuses = ["won"];
 
+// Civisto service offerings
 export const defaultDealCategories = [
+  "Indoor Air Quality Monitoring",
+  "Outdoor Environmental Monitoring",
+  "Energy Monitoring & Reporting",
+  "Climate Data Analytics",
+  "Compliance Reporting",
+  "Custom Dashboard Development",
+  "API Integration",
+  "Consulting Services",
+  "Training & Onboarding",
   "Other",
-  "Copywriting",
-  "Print project",
-  "UI Design",
-  "Website design",
 ];
 
+// Lead temperature and customer status
 export const defaultNoteStatuses = [
-  { value: "cold", label: "Cold", color: "#7dbde8" },
-  { value: "warm", label: "Warm", color: "#e8cb7d" },
-  { value: "hot", label: "Hot", color: "#e88b7d" },
-  { value: "in-contract", label: "In Contract", color: "#a4e87d" },
+  { value: "cold", label: "Cold Lead", color: "#7dbde8" },
+  { value: "warm", label: "Warm Lead", color: "#e8cb7d" },
+  { value: "hot", label: "Hot Lead", color: "#e88b7d" },
+  { value: "customer", label: "Active Customer", color: "#a4e87d" },
+  { value: "churned", label: "Churned", color: "#e87d7d" },
 ];
 
+// SaaS sales and customer success task types
 export const defaultTaskTypes = [
+  "Demo Call",
+  "Discovery Call",
+  "Follow-up Email",
+  "Send Proposal",
+  "Contract Review",
+  "Onboarding Call",
+  "Technical Setup",
+  "Training Session",
+  "Check-in Call",
+  "Renewal Discussion",
+  "Upsell Meeting",
+  "Support Ticket",
+  "Site Visit",
+  "Sensor Installation",
+  "Data Review",
   "None",
-  "Email",
-  "Demo",
-  "Lunch",
-  "Meeting",
-  "Follow-up",
-  "Thank you",
-  "Ship",
-  "Call",
 ];
 
 export const defaultContactGender = [
