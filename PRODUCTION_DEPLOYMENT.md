@@ -147,13 +147,19 @@ supabase link --project-ref [PROJECT_REF]
 ls -la supabase/migrations/
 ```
 
-Key migrations to check:
-1. `20240730075029_init_db.sql` - Creates all tables
-2. `20240730075425_init_triggers.sql` - Creates triggers for user sync
-3. `20240808141826_init_state_configure.sql` - Creates init_state view
-4. `20250109152531_email_jsonb.sql` - Adds email_jsonb column
-5. `20250113132531_phone_jsonb.sql` - Adds phone_jsonb column
-6. `20241104153231_sales_policies.sql` - Configures RLS policies
+**Complete list of migrations (in order):**
+
+1. `20240730075029_init_db.sql` - Creates all tables (companies, contacts, deals, sales, tasks, etc.)
+2. `20240730075425_init_triggers.sql` - Creates triggers for user sync (handle_new_user)
+3. `20240806124555_task_sales_id.sql` - **CRITICAL:** Adds sales_id column to tasks table
+4. `20240807082449_remove-aquisition.sql` - Removes deprecated acquisition field
+5. `20240808141826_init_state_configure.sql` - Creates init_state view
+6. `20240813084010_tags_policy.sql` - Configures RLS policies for tags
+7. `20241104153231_sales_policies.sql` - Configures RLS policies for sales table
+8. `20250109152531_email_jsonb.sql` - **CRITICAL:** Adds email_jsonb column and migrates data
+9. `20250113132531_phone_jsonb.sql` - **CRITICAL:** Adds phone_jsonb column and migrates data
+
+**Note:** Migrations marked as **CRITICAL** must be applied or the application will fail with schema errors.
 
 **If using separate schema**, modify each migration file:
 ```bash
@@ -186,9 +192,35 @@ for file in supabase/migrations/*.sql; do
 done
 ```
 
-### Phase 4: Create Missing Triggers
+### Phase 4: Verify All Migrations Applied
 
-**IMPORTANT:** These triggers were missing in the playground deployment:
+**CRITICAL:** Check that these specific migrations were applied:
+
+```bash
+# Check for sales_id column in tasks table
+curl -X POST "https://api.supabase.com/v1/projects/[PROJECT_REF]/database/query" \
+  -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"query":"SELECT column_name FROM information_schema.columns WHERE table_name = '\''tasks'\'' AND column_name = '\''sales_id'\'';"}'
+
+# Check for email_jsonb column in contacts table
+curl -X POST "https://api.supabase.com/v1/projects/[PROJECT_REF]/database/query" \
+  -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"query":"SELECT column_name FROM information_schema.columns WHERE table_name = '\''contacts'\'' AND column_name = '\''email_jsonb'\'';"}'
+
+# Check for phone_jsonb column in contacts table
+curl -X POST "https://api.supabase.com/v1/projects/[PROJECT_REF]/database/query" \
+  -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"query":"SELECT column_name FROM information_schema.columns WHERE table_name = '\''contacts'\'' AND column_name = '\''phone_jsonb'\'';"}'
+```
+
+If any are missing, apply them manually using the Management API.
+
+### Phase 5: Create Missing Triggers
+
+**IMPORTANT:** The `on_auth_user_updated` trigger is NOT created by the migrations and must be added manually:
 
 ```sql
 -- Create update user trigger
@@ -223,7 +255,7 @@ curl -X POST "https://api.supabase.com/v1/projects/[PROJECT_REF]/database/query"
   -d '{"query":"[SQL_FROM_ABOVE]"}'
 ```
 
-### Phase 5: Configure Row Level Security (RLS)
+### Phase 6: Configure Row Level Security (RLS)
 
 Verify RLS policies exist for all tables:
 
@@ -256,7 +288,7 @@ CREATE POLICY "Enable delete for users based on user_id" ON public.sales
     USING (user_id = auth.uid());
 ```
 
-### Phase 6: Deploy Edge Functions
+### Phase 7: Deploy Edge Functions
 
 ```bash
 # Deploy all edge functions
@@ -268,7 +300,7 @@ supabase functions deploy postmark
 supabase functions list
 ```
 
-### Phase 7: Reload PostgREST Schema Cache
+### Phase 8: Reload PostgREST Schema Cache
 
 **CRITICAL:** After migrations, reload the schema cache:
 
@@ -284,7 +316,7 @@ curl -X POST "https://api.supabase.com/v1/projects/[PROJECT_REF]/database/query"
   -d '{"query":"NOTIFY pgrst, '\''reload schema'\'';"}'
 ```
 
-### Phase 8: Build and Deploy Frontend
+### Phase 9: Build and Deploy Frontend
 
 ```bash
 # Create production environment file
@@ -415,7 +447,23 @@ WHERE table_name = 'contacts' AND column_name = 'email_jsonb';
 
 **Cause:** Missing `on_auth_user_updated` trigger
 
-**Solution:** Apply the trigger creation SQL from Phase 4
+**Solution:** Apply the trigger creation SQL from Phase 5
+
+### Issue: "sales_id is missing" when creating tasks
+
+**Cause:** Migration `20240806124555_task_sales_id.sql` not applied
+
+**Solution:**
+```sql
+ALTER TABLE public.tasks ADD COLUMN sales_id bigint;
+```
+
+Then reload schema cache:
+```sql
+NOTIFY pgrst, 'reload schema';
+```
+
+Wait 30-60 seconds and hard refresh browser.
 
 ### Issue: Duplicate sales records
 
