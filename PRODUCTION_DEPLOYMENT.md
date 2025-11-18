@@ -577,6 +577,63 @@ Both will track their migrations independently in the `supabase_migrations.schem
 
 ---
 
+## Civisto-Specific Configuration
+
+### Customized Settings
+
+The CRM has been customized for Civisto's indoor/outdoor monitoring SaaS business:
+
+**Deal Categories:**
+- Indoor Air Quality Monitoring
+- Outdoor Environmental Monitoring
+- Energy Monitoring & Reporting
+- Climate Data Analytics
+- Compliance Reporting
+- Custom Dashboard Development
+- API Integration
+- Consulting Services
+- Training & Onboarding
+- Other
+
+**Company Sectors:**
+- Hotels & Hospitality
+- Office Buildings
+- Commercial Real Estate
+- Municipal & Government
+- Healthcare Facilities
+- Educational Institutions
+- Data Centers
+- Property Management
+- Facility Management Services
+- And 11 more relevant sectors
+
+**Task Types:**
+- Demo Call, Discovery Call
+- Onboarding Call, Technical Setup, Training Session
+- Check-in Call, Renewal Discussion, Upsell Meeting
+- Site Visit, Sensor Installation, Data Review
+- And more
+
+**Deal Stages:**
+- Lead → Qualified → Demo Scheduled → Demo Completed
+- Proposal Sent → Negotiation → Contract Sent
+- Won / Lost / On Hold
+
+### Modifying Configuration
+
+To customize these settings for production:
+
+1. Edit `src/components/atomic-crm/root/defaultConfiguration.ts`
+2. Modify the relevant arrays:
+   - `defaultDealCategories`
+   - `defaultCompanySectors`
+   - `defaultTaskTypes`
+   - `defaultDealStages`
+   - `defaultNoteStatuses`
+3. Rebuild and redeploy (see Phase 9)
+
+---
+
 ## Production Deployment Checklist
 
 ### Pre-Deployment
