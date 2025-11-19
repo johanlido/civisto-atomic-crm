@@ -29,18 +29,14 @@ export const defaultCompanySectors = [
   "Other",
 ];
 
-// SaaS-focused deal stages
+// Deal stages (keeping original values for backward compatibility)
 export const defaultDealStages = [
-  { value: "lead", label: "Lead" },
-  { value: "qualified", label: "Qualified" },
-  { value: "demo-scheduled", label: "Demo Scheduled" },
-  { value: "demo-completed", label: "Demo Completed" },
+  { value: "opportunity", label: "Opportunity" },
   { value: "proposal-sent", label: "Proposal Sent" },
-  { value: "negotiation", label: "Negotiation" },
-  { value: "contract-sent", label: "Contract Sent" },
+  { value: "in-negociation", label: "In Negotiation" },
   { value: "won", label: "Won" },
   { value: "lost", label: "Lost" },
-  { value: "on-hold", label: "On Hold" },
+  { value: "delayed", label: "Delayed" },
 ];
 
 export const defaultDealPipelineStatuses = ["won"];
