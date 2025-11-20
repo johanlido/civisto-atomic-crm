@@ -9,6 +9,7 @@ export const defaultTitle = "Atomic CRM";
 export const defaultCompanySectors = [
   "Hotels & Hospitality",
   "Office Buildings",
+  "Investment company",
   "Commercial Real Estate",
   "Residential Buildings",
   "Healthcare Facilities",
@@ -23,14 +24,13 @@ export const defaultCompanySectors = [
   "Co-working Spaces",
   "Property Management",
   "Facility Management Services",
-  "Environmental Consulting",
-  "Energy & Utilities",
   "Construction & Development",
   "Other",
 ];
 
 // Deal stages (keeping original values for backward compatibility)
 export const defaultDealStages = [
+  { value: "initial-contact", label: "Initial Contact" },
   { value: "opportunity", label: "Opportunity" },
   { value: "proposal-sent", label: "Proposal Sent" },
   { value: "in-negociation", label: "In Negotiation" },
@@ -43,15 +43,14 @@ export const defaultDealPipelineStatuses = ["won"];
 
 // Civisto service offerings
 export const defaultDealCategories = [
+  "Indoor QR-Code reporting",
+  "Outdoor Geo reorting",
+  "API Integration",
+  "Consulting Services",
   "Indoor Air Quality Monitoring",
   "Outdoor Environmental Monitoring",
   "Energy Monitoring & Reporting",
   "Climate Data Analytics",
-  "Compliance Reporting",
-  "Custom Dashboard Development",
-  "API Integration",
-  "Consulting Services",
-  "Training & Onboarding",
   "Other",
 ];
 
@@ -66,14 +65,15 @@ export const defaultNoteStatuses = [
 
 // SaaS sales and customer success task types
 export const defaultTaskTypes = [
-  "Demo Call",
   "Discovery Call",
   "Follow-up Email",
+  "Demo Call",
   "Send Proposal",
   "Contract Review",
   "Onboarding Call",
   "Technical Setup",
   "Training Session",
+  "Consulting",
   "Check-in Call",
   "Renewal Discussion",
   "Upsell Meeting",
@@ -87,5 +87,4 @@ export const defaultTaskTypes = [
 export const defaultContactGender = [
   { value: "male", label: "He/Him", icon: Mars },
   { value: "female", label: "She/Her", icon: Venus },
-  { value: "nonbinary", label: "They/Them", icon: NonBinary },
 ];
