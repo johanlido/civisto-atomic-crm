@@ -1,5 +1,5 @@
-import { ListBase, Title, useListContext } from "ra-core";
-import { useState } from "react";
+import { ListBase, useListContext } from "ra-core";
+import { useEffect, useState } from "react";
 
 import type { Report } from "./report";
 import { ReportListContent } from "./ReportListContent";
@@ -44,9 +44,12 @@ const ReportListLayout = () => {
     refetch();
   };
 
+  useEffect(() => {
+    document.title = "Tickets";
+  }, []);
+
   return (
     <div>
-      <Title title="Tickets" />
       <div className="flex items-center justify-between mb-4">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Tickets</h2>
