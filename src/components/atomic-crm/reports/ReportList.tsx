@@ -1,35 +1,29 @@
 import { ListBase, Title, useListContext } from "ra-core";
 import { useState } from "react";
-import { matchPath, useLocation } from "react-router";
 
 import type { Report } from "./report";
 import { ReportListContent } from "./ReportListContent";
 import { ReportShow } from "./ReportShow";
 
+/**
+ * ReportList — the main Tickets page.
+ *
+ * Uses `crm_tickets` view for reading (mapped in the data provider)
+ * and writes back to the `reports` table for updates.
+ */
 const ReportList = () => {
-  const location = useLocation();
-  const matchShow = matchPath("/reports/:id/show", location.pathname);
-  const matchEdit = matchPath("/reports/:id", location.pathname);
-
   return (
     <ListBase
-      perPage={200}
-      sort={{ field: "index", order: "ASC" }}
-      filter={{ archived_at: null }}
+      perPage={500}
+      sort={{ field: "created_at", order: "DESC" }}
     >
-      <ReportListLayout>
-        <ReportShow
-          open={!!matchShow}
-          report={null}
-          onClose={() => {}}
-        />
-      </ReportListLayout>
+      <ReportListLayout />
     </ListBase>
   );
 };
 
-const ReportListLayout = ({ children }: { children: React.ReactNode }) => {
-  const { data: reports } = useListContext<Report>();
+const ReportListLayout = () => {
+  const { data: reports, refetch } = useListContext<Report>();
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [showDialog, setShowDialog] = useState(false);
 
@@ -41,6 +35,13 @@ const ReportListLayout = ({ children }: { children: React.ReactNode }) => {
   const handleCloseDialog = () => {
     setShowDialog(false);
     setSelectedReport(null);
+    // Refetch to pick up any changes made in the dialog
+    refetch();
+  };
+
+  const handleStatusChange = () => {
+    // Refetch the list after a status change in the dialog
+    refetch();
   };
 
   return (
@@ -50,7 +51,7 @@ const ReportListLayout = ({ children }: { children: React.ReactNode }) => {
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Tickets</h2>
           <p className="text-muted-foreground">
-            Indoor and outdoor reports from Civisto
+            All reports from Civisto — manage, respond, and track progress
           </p>
         </div>
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -66,8 +67,8 @@ const ReportListLayout = ({ children }: { children: React.ReactNode }) => {
         report={selectedReport}
         open={showDialog}
         onClose={handleCloseDialog}
+        onStatusChange={handleStatusChange}
       />
-      {children}
     </div>
   );
 };

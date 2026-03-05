@@ -1,24 +1,51 @@
 import type { Identifier, RaRecord } from "ra-core";
 
+/**
+ * Report type matching the Civisto `crm_tickets` view.
+ * The CRM reads from `crm_tickets` (a view over `public.reports`)
+ * and writes back to `public.reports` via the data provider mapping.
+ */
 export type Report = {
   title: string;
-  description: string;
-  workflow_status: string;
+  description: string | null;
+  workflow_status: string; // admin_status from reports table
   category: string;
   report_type: "outdoor" | "indoor";
-  entity_name: string | null;
-  customer_name: string | null;
-  customer_id: Identifier | null;
   priority: "low" | "medium" | "high" | "critical";
   reporter_name: string | null;
+  reporter_status: string | null; // user-facing status
   location_description: string | null;
+  assigned_to: string | null;
+  admin_notes: string | null;
   images: string[];
   ai_suggested_category: string | null;
   ai_category_confidence: number | null;
   created_at: string;
   updated_at: string;
-  index: number;
+  index: number; // kanban_index
+  user_id: string | null;
 } & Pick<RaRecord, "id">;
+
+/**
+ * Comment type matching the Civisto `comments` table.
+ */
+export type ReportComment = {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  user_id: string;
+  report_id: string;
+  content: string;
+  is_system: boolean;
+  is_admin: boolean;
+  author_role: "reporter" | "admin" | "system";
+  user?: {
+    id: string;
+    username: string | null;
+    full_name: string | null;
+    avatar_url: string | null;
+  };
+};
 
 export interface ReportStatus {
   value: string;
@@ -34,20 +61,22 @@ export const REPORT_STATUSES: ReportStatus[] = [
   { value: "closed", label: "Closed", color: "#6b7280" },
 ];
 
-export const REPORT_CATEGORIES = [
-  "HVAC",
-  "Electrical",
-  "Plumbing",
-  "IT / Network",
-  "Mechanical",
-  "Cleaning",
-  "Safety",
-  "Structural",
-  "Elevator",
-  "Parking",
-  "Outdoor",
-  "Other",
-];
+/**
+ * Civisto report categories (from the report_category enum).
+ * These are the actual categories stored in the database.
+ */
+export const REPORT_CATEGORIES: Record<string, string> = {
+  pothole: "Pothole",
+  graffiti: "Graffiti",
+  broken_light: "Broken Light",
+  trash: "Trash / Litter",
+  vandalism: "Vandalism",
+  safety_hazard: "Safety Hazard",
+  water_leak: "Water Leak",
+  noise_pollution: "Noise Pollution",
+  parking_violation: "Parking Violation",
+  other: "Other",
+};
 
 export const REPORT_PRIORITIES = [
   { value: "low", label: "Low", color: "#6b7280" },
@@ -97,4 +126,8 @@ export const findStatusColor = (status: string): string => {
 export const findPriorityColor = (priority: string): string => {
   const found = REPORT_PRIORITIES.find((p) => p.value === priority);
   return found ? found.color : "#6b7280";
+};
+
+export const findCategoryLabel = (category: string): string => {
+  return REPORT_CATEGORIES[category] || category;
 };

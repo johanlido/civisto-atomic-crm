@@ -2,37 +2,35 @@ import { Draggable } from "@hello-pangea/dnd";
 import { formatDistance } from "date-fns";
 import {
   AlertTriangle,
-  Building2,
   MapPin,
-  Thermometer,
-  Wrench,
-  Zap,
   Droplets,
-  Wifi,
-  Shield,
+  Lightbulb,
   Trash2,
   Car,
-  TreePine,
+  Volume2,
+  Hammer,
+  ShieldAlert,
+  CircleDot,
+  HelpCircle,
+  Building2,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 import type { Report } from "./report";
-import { findPriorityColor } from "./report";
+import { findPriorityColor, findCategoryLabel } from "./report";
 
 const categoryIcons: Record<string, React.ElementType> = {
-  HVAC: Thermometer,
-  Electrical: Zap,
-  Plumbing: Droplets,
-  "IT / Network": Wifi,
-  Mechanical: Wrench,
-  Cleaning: Trash2,
-  Safety: Shield,
-  Structural: Building2,
-  Elevator: Building2,
-  Parking: Car,
-  Outdoor: TreePine,
-  Other: AlertTriangle,
+  pothole: CircleDot,
+  graffiti: Hammer,
+  broken_light: Lightbulb,
+  trash: Trash2,
+  vandalism: Hammer,
+  safety_hazard: ShieldAlert,
+  water_leak: Droplets,
+  noise_pollution: Volume2,
+  parking_violation: Car,
+  other: HelpCircle,
 };
 
 export const ReportCard = ({
@@ -106,11 +104,18 @@ export const ReportCardContent = ({
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium truncate">{report.title}</p>
-              {report.entity_name && (
+              {report.reporter_name && (
                 <div className="flex items-center gap-1 mt-1">
+                  <span className="text-xs text-muted-foreground truncate">
+                    Reported by {report.reporter_name}
+                  </span>
+                </div>
+              )}
+              {report.location_description && (
+                <div className="flex items-center gap-1 mt-0.5">
                   <MapPin className="w-3 h-3 text-muted-foreground" />
                   <span className="text-xs text-muted-foreground truncate">
-                    {report.entity_name}
+                    {report.location_description}
                   </span>
                 </div>
               )}
@@ -125,13 +130,14 @@ export const ReportCardContent = ({
                     variant="secondary"
                     className="text-[10px] px-1.5 py-0"
                   >
-                    {report.category}
+                    {findCategoryLabel(report.category)}
                   </Badge>
                   {report.report_type === "indoor" && (
                     <Badge
                       variant="outline"
                       className="text-[10px] px-1.5 py-0"
                     >
+                      <Building2 className="w-3 h-3 mr-0.5" />
                       Indoor
                     </Badge>
                   )}
@@ -148,7 +154,7 @@ export const ReportCardContent = ({
                 report.ai_category_confidence != null && (
                   <div className="flex items-center gap-1 mt-1">
                     <span className="text-[10px] text-blue-500">
-                      AI: {report.ai_suggested_category} (
+                      AI: {findCategoryLabel(report.ai_suggested_category)} (
                       {Math.round(report.ai_category_confidence * 100)}%)
                     </span>
                   </div>

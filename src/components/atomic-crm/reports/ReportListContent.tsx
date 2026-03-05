@@ -70,7 +70,7 @@ export const ReportListContent = ({
       ),
     );
 
-    // Persist the change
+    // Persist the change — write to the `reports` table via admin_status
     updateReportStatus(
       sourceReport,
       destinationStatus,
@@ -128,6 +128,13 @@ const updateReportStatusLocal = (
   }
 };
 
+/**
+ * Persist the status change to the database.
+ * The CRM writes `admin_status` to the `reports` table.
+ * The database trigger `sync_admin_status_trigger` will automatically
+ * update the user-facing `status` column, and `admin_status_change_notification`
+ * will notify the reporter.
+ */
 const updateReportStatus = async (
   source: Report,
   newStatus: string,
@@ -136,7 +143,7 @@ const updateReportStatus = async (
   await dataProvider.update("reports", {
     id: source.id,
     data: {
-      workflow_status: newStatus,
+      admin_status: newStatus,
       updated_at: new Date().toISOString(),
     },
     previousData: source,

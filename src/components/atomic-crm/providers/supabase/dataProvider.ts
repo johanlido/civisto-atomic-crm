@@ -88,6 +88,11 @@ const dataProviderWithCustomMethods = {
     if (resource === "contacts") {
       return baseDataProvider.getList("contacts_summary", params);
     }
+    // Reports resource reads from the crm_tickets view
+    // which joins reports with users for reporter info
+    if (resource === "reports") {
+      return baseDataProvider.getList("crm_tickets", params);
+    }
 
     return baseDataProvider.getList(resource, params);
   },
@@ -97,6 +102,10 @@ const dataProviderWithCustomMethods = {
     }
     if (resource === "contacts") {
       return baseDataProvider.getOne("contacts_summary", params);
+    }
+    // Reports resource reads from the crm_tickets view
+    if (resource === "reports") {
+      return baseDataProvider.getOne("crm_tickets", params);
     }
 
     return baseDataProvider.getOne(resource, params);
