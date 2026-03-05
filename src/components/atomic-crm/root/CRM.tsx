@@ -15,6 +15,7 @@ import companies from "../companies";
 import contacts from "../contacts";
 import { Dashboard } from "../dashboard/Dashboard";
 import deals from "../deals";
+import reports from "../reports";
 import { Layout } from "../layout/Layout";
 import { SignupPage } from "../login/SignupPage";
 import {
@@ -161,6 +162,7 @@ export const CRM = ({
         <Resource name="tasks" />
         <Resource name="sales" {...sales} />
         <Resource name="tags" />
+        <Resource name="reports" {...reports} />
       </Admin>
     </ConfigurationProvider>
   );
