@@ -16,7 +16,7 @@ export const ReportColumn = ({
   const statusColor = findStatusColor(status);
 
   return (
-    <div className="flex-1 min-w-[280px] pb-8">
+    <div className="flex-1 min-w-[75vw] sm:min-w-[280px] snap-center pb-8">
       <div className="flex flex-col items-center mb-2">
         <div className="flex items-center gap-2">
           <div

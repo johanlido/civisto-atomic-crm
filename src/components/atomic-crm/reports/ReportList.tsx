@@ -50,14 +50,14 @@ const ReportListLayout = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">Tickets</h2>
-          <p className="text-muted-foreground">
+      <div className="flex items-center justify-between mb-3 sm:mb-4">
+        <div className="min-w-0">
+          <h2 className="text-xl sm:text-2xl font-bold tracking-tight">Tickets</h2>
+          <p className="text-sm text-muted-foreground hidden sm:block">
             All reports from Civisto — manage, respond, and track progress
           </p>
         </div>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground shrink-0">
           {reports && (
             <span>
               {reports.length} {reports.length === 1 ? "ticket" : "tickets"}
