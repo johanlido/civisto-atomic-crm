@@ -1,0 +1,17 @@
+-- ============================================================================
+-- REPORTS TICKETING (CRM Integration)
+-- ============================================================================
+-- This migration is intentionally empty.
+--
+-- The reports table and CRM ticketing infrastructure (crm_tickets view,
+-- admin_status, comments, notifications) are managed by the Civisto
+-- database migration:
+--
+--   civisto/backend/supabase/migrations/20260305000001_crm_ticketing_integration.sql
+--
+-- Both civisto-atomic-crm and the Civisto mobile app share the same
+-- Supabase database. The CRM reads from the `crm_tickets` view and
+-- writes to the `reports` table directly.
+--
+-- See: https://github.com/johanlido/civisto/issues/119
+-- ============================================================================
