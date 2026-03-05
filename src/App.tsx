@@ -1,5 +1,11 @@
 import { CRM } from "@/components/atomic-crm/root/CRM";
 
+function getBasename(): string | undefined {
+  const base = import.meta.env.BASE_URL;
+  if (!base || base === "/" || base === "./") return undefined;
+  return base.replace(/\/$/, "");
+}
+
 /**
  * Application entry point
  *
@@ -25,6 +31,6 @@ import { CRM } from "@/components/atomic-crm/root/CRM";
  *    />
  * );
  */
-const App = () => <CRM />;
+const App = () => <CRM basename={getBasename()} />;
 
 export default App;

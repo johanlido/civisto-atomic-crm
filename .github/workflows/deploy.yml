@@ -83,8 +83,14 @@ jobs:
             - name: 📥 Download deps
               run: npm install
 
+            - name: 🔧 Compute base path
+              run: echo "VITE_BASE_PATH=/$(echo '${{ vars.DEMO_DEPLOY_REPOSITORY }}' | cut -d'/' -f2)/" >> $GITHUB_ENV
+
             - name: 🔨 Build
               run: npm run build:demo
+
+            - name: 📋 Copy index.html to 404.html
+              run: cp dist/index.html dist/404.html
 
             - name: 📡 Deploy GitHub pages
               run: npx gh-pages --remote production -d dist -b ${{ vars.DEPLOY_BRANCH || 'gh-pages' }}
@@ -134,8 +140,14 @@ jobs:
             - name: 📥 Download deps
               run: npm install
 
+            - name: 🔧 Compute base path
+              run: echo "VITE_BASE_PATH=/$(echo '${{ vars.DEPLOY_REPOSITORY }}' | cut -d'/' -f2)/" >> $GITHUB_ENV
+
             - name: 🔨 Build
               run: npm run build
+
+            - name: 📋 Copy index.html to 404.html
+              run: cp dist/index.html dist/404.html
 
             - if: ${{ env.IS_SUPABASE_CONFIGURED }}
               name: 🔗 Supabase Link
