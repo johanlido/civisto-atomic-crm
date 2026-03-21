@@ -10,6 +10,7 @@ import { SingleFieldList } from "@/components/admin/single-field-list";
 import { TextField } from "@/components/admin/text-field";
 import { DateField } from "@/components/admin/date-field";
 import { EmailField } from "@/components/admin/email-field";
+import { ExpandableText } from "@/components/ui/expandable-text";
 
 import { AddTask } from "../tasks/AddTask";
 import { TasksIterator } from "../tasks/TasksIterator";
@@ -95,7 +96,7 @@ export const ContactAside = ({ link = "edit" }: { link?: "edit" | "show" }) => {
         <WithRecord<Contact>
           render={(record) =>
             record?.background ? (
-              <TextField source="background" record={record} className="pb-2" />
+              <ExpandableText text={record.background} className="pb-2" />
             ) : null
           }
         />
