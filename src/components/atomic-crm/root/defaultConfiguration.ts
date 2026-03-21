@@ -44,7 +44,7 @@ export const defaultDealPipelineStatuses = ["won"];
 // Civisto service offerings
 export const defaultDealCategories = [
   "Indoor QR-Code reporting",
-  "Outdoor Geo reorting",
+  "Outdoor Geo reporting",
   "API Integration",
   "Consulting Services",
   "Indoor Air Quality Monitoring",
@@ -65,6 +65,8 @@ export const defaultNoteStatuses = [
 
 // SaaS sales and customer success task types
 export const defaultTaskTypes = [
+  "Send RFI",
+  "Generate Onepager",
   "Discovery Call",
   "Follow-up Email",
   "Demo Call",
@@ -88,3 +90,7 @@ export const defaultContactGender = [
   { value: "male", label: "He/Him", icon: Mars },
   { value: "female", label: "She/Her", icon: Venus },
 ];
+
+// Locale and currency defaults (Swedish market)
+export const defaultLocale = "sv-SE";
+export const defaultCurrency = "SEK";

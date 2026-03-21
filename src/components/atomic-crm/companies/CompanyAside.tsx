@@ -7,6 +7,7 @@ import { TextField } from "@/components/admin/text-field";
 import { DateField } from "@/components/admin/date-field";
 import { UrlField } from "@/components/admin/url-field";
 import { SelectField } from "@/components/admin/select-field";
+import { ExpandableText } from "@/components/ui/expandable-text";
 
 import { AsideSection } from "../misc/AsideSection";
 import { SaleName } from "../sales/SaleName";
@@ -150,7 +151,7 @@ const AdditionalInfo = ({ record }: { record: Company }) => {
   return (
     <AsideSection title="Additional Info">
       {record.description && (
-        <p className="text-sm  mb-1">{record.description}</p>
+        <ExpandableText text={record.description} className="mb-1" />
       )}
       {record.context_links && (
         <div className="flex flex-col">
