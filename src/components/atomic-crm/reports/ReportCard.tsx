@@ -85,13 +85,13 @@ export const ReportCardContent = ({
       onClick={handleClick}
     >
       <Card
-        className={`py-3 transition-all duration-200 ${
+        className={`py-3 transition-all duration-200 touch-manipulation ${
           snapshot?.isDragging
             ? "opacity-90 transform rotate-1 shadow-lg"
-            : "shadow-sm hover:shadow-md"
+            : "shadow-sm hover:shadow-md active:shadow-md active:scale-[0.98]"
         }`}
       >
-        <CardContent className="px-3">
+        <CardContent className="px-3 sm:px-3">
           <div className="flex items-start gap-2">
             <div
               className="mt-0.5 p-1 rounded"

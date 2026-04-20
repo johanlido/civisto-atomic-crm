@@ -135,6 +135,34 @@
           "type": "registry:component"
         },
         {
+          "path": "src/components/atomic-crm/reports/report.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/reports/index.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/reports/ReportShow.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/reports/ReportListContent.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/reports/ReportList.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/reports/ReportColumn.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/reports/ReportCard.tsx",
+          "type": "registry:component"
+        },
+        {
           "path": "src/components/atomic-crm/providers/types.ts",
           "type": "registry:component"
         },

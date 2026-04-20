@@ -82,7 +82,7 @@ export const ReportListContent = ({
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="flex gap-4 overflow-x-auto">
+      <div className="flex gap-3 sm:gap-4 overflow-x-auto snap-x snap-mandatory sm:snap-none pb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
         {REPORT_STATUSES.map((status) => (
           <ReportColumn
             status={status.value}

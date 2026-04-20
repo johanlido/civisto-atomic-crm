@@ -64,15 +64,19 @@ export const ReportShow = ({
   const [savingNotes, setSavingNotes] = useState(false);
   const [changingStatus, setChangingStatus] = useState(false);
   const [changingPriority, setChangingPriority] = useState(false);
+  const [currentStatus, setCurrentStatus] = useState(report?.workflow_status ?? "new");
+  const [currentPriority, setCurrentPriority] = useState(report?.priority ?? "medium");
   const commentsEndRef = useRef<HTMLDivElement>(null);
 
-  // Load comments when report changes
+  // Sync local state when a different report is opened
   useEffect(() => {
     if (report && open) {
       loadComments(String(report.id));
       setAdminNotes(report.admin_notes || "");
+      setCurrentStatus(report.workflow_status);
+      setCurrentPriority(report.priority || "medium");
     }
-  }, [report?.id, open]);
+  }, [report, open]);
 
   // Scroll to bottom of comments when new ones are loaded
   useEffect(() => {
@@ -134,6 +138,7 @@ export const ReportShow = ({
   const handleStatusChange = async (newStatus: string) => {
     if (!report || changingStatus) return;
     setChangingStatus(true);
+    setCurrentStatus(newStatus);
     try {
       await dataProvider.update("reports", {
         id: report.id,
@@ -146,6 +151,7 @@ export const ReportShow = ({
       onStatusChange?.(String(report.id), newStatus);
     } catch (err) {
       console.error("Error changing status:", err);
+      setCurrentStatus(report.workflow_status);
     } finally {
       setChangingStatus(false);
     }
@@ -154,6 +160,7 @@ export const ReportShow = ({
   const handlePriorityChange = async (newPriority: string) => {
     if (!report || changingPriority) return;
     setChangingPriority(true);
+    setCurrentPriority(newPriority);
     try {
       await dataProvider.update("reports", {
         id: report.id,
@@ -165,6 +172,7 @@ export const ReportShow = ({
       });
     } catch (err) {
       console.error("Error changing priority:", err);
+      setCurrentPriority(report.priority || "medium");
     } finally {
       setChangingPriority(false);
     }
@@ -191,17 +199,65 @@ export const ReportShow = ({
 
   if (!report) return null;
 
-  const statusColor = findStatusColor(report.workflow_status);
-  const priorityColor = findPriorityColor(report.priority || "medium");
+  const statusColor = findStatusColor(currentStatus);
+  const priorityColor = findPriorityColor(currentPriority);
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent className="lg:max-w-3xl p-6 overflow-y-auto max-h-[90vh]">
+      <DialogContent className="w-[calc(100vw-1rem)] sm:w-auto lg:max-w-3xl p-4 sm:p-6 overflow-y-auto max-h-[90dvh]">
         <DialogHeader>
-          <DialogTitle className="text-xl">{report.title}</DialogTitle>
+          <DialogTitle className="text-lg sm:text-xl">{report.title}</DialogTitle>
         </DialogHeader>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* On mobile: admin actions first as compact inline row, then details below */}
+        <div className="flex flex-wrap items-center gap-2 lg:hidden mb-2">
+          <Select
+            value={currentStatus}
+            onValueChange={handleStatusChange}
+            disabled={changingStatus}
+          >
+            <SelectTrigger className="w-auto min-w-[140px] h-9">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {REPORT_STATUSES.map((status) => (
+                <SelectItem key={status.value} value={status.value}>
+                  <div className="flex items-center gap-2">
+                    <div
+                      className="w-2 h-2 rounded-full"
+                      style={{ backgroundColor: status.color }}
+                    />
+                    {status.label}
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select
+            value={currentPriority}
+            onValueChange={handlePriorityChange}
+            disabled={changingPriority}
+          >
+            <SelectTrigger className="w-auto min-w-[120px] h-9">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {REPORT_PRIORITIES.map((p) => (
+                <SelectItem key={p.value} value={p.value}>
+                  <div className="flex items-center gap-2">
+                    <div
+                      className="w-2 h-2 rounded-full"
+                      style={{ backgroundColor: p.color }}
+                    />
+                    {p.label}
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           {/* Left column: Report details */}
           <div className="lg:col-span-2 space-y-4">
             {/* Status and Priority badges */}
@@ -214,7 +270,7 @@ export const ReportShow = ({
                 }}
                 variant="outline"
               >
-                {findStatusLabel(report.workflow_status)}
+                {findStatusLabel(currentStatus)}
               </Badge>
               {report.priority && (
                 <Badge
@@ -246,7 +302,7 @@ export const ReportShow = ({
             <Separator />
 
             {/* Details grid */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               {report.category && (
                 <div className="flex flex-col">
                   <span className="text-xs text-muted-foreground tracking-wide flex items-center gap-1">
@@ -369,7 +425,7 @@ export const ReportShow = ({
               </div>
 
               {/* Comments list */}
-              <div className="space-y-3 max-h-[300px] overflow-y-auto pr-1">
+              <div className="space-y-3 max-h-[40dvh] sm:max-h-[300px] overflow-y-auto pr-1 -mx-1 px-1">
                 {loadingComments ? (
                   <p className="text-sm text-muted-foreground">
                     Loading comments...
@@ -392,7 +448,7 @@ export const ReportShow = ({
                   placeholder="Write a response to the reporter..."
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
-                  className="min-h-[60px] text-sm"
+                  className="min-h-[48px] sm:min-h-[60px] text-sm"
                   onKeyDown={(e) => {
                     if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
                       submitComment();
@@ -400,29 +456,57 @@ export const ReportShow = ({
                   }}
                 />
                 <Button
-                  size="sm"
+                  size="icon"
                   onClick={submitComment}
                   disabled={submitting || !newComment.trim()}
-                  className="self-end"
+                  className="self-end h-10 w-10 shrink-0"
                 >
                   <Send className="w-4 h-4" />
                 </Button>
               </div>
-              <p className="text-[10px] text-muted-foreground mt-1">
+              <p className="text-[10px] text-muted-foreground mt-1 hidden sm:block">
                 Press Ctrl+Enter to send. The reporter will be notified.
               </p>
             </div>
+
+            {/* Mobile-only admin notes (below comments) */}
+            <div className="lg:hidden">
+              <Separator />
+              <div className="pt-3">
+                <div className="flex items-center gap-2 mb-2">
+                  <StickyNote className="w-3 h-3 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground tracking-wide">
+                    Internal Notes
+                  </span>
+                </div>
+                <Textarea
+                  placeholder="Internal notes (not visible to reporter)..."
+                  value={adminNotes}
+                  onChange={(e) => setAdminNotes(e.target.value)}
+                  className="min-h-[60px] text-sm"
+                />
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={saveAdminNotes}
+                  disabled={savingNotes || adminNotes === (report.admin_notes || "")}
+                  className="mt-2 w-full h-10"
+                >
+                  {savingNotes ? "Saving..." : "Save Notes"}
+                </Button>
+              </div>
+            </div>
           </div>
 
-          {/* Right column: Admin actions */}
-          <div className="space-y-4">
+          {/* Right column: Admin actions — hidden on mobile (status/priority shown inline above) */}
+          <div className="hidden lg:block space-y-4">
             {/* Status selector */}
             <div>
               <span className="text-xs text-muted-foreground tracking-wide block mb-2">
                 Workflow Status
               </span>
               <Select
-                value={report.workflow_status}
+                value={currentStatus}
                 onValueChange={handleStatusChange}
                 disabled={changingStatus}
               >
@@ -451,7 +535,7 @@ export const ReportShow = ({
                 Priority
               </span>
               <Select
-                value={report.priority || "medium"}
+                value={currentPriority}
                 onValueChange={handlePriorityChange}
                 disabled={changingPriority}
               >
@@ -521,8 +605,6 @@ export const ReportShow = ({
 const CommentBubble = ({ comment }: { comment: ReportComment }) => {
   const isAdmin = comment.is_admin || comment.author_role === "admin";
   const isSystem = comment.is_system || comment.author_role === "system";
-  const isReporter = !isAdmin && !isSystem;
-
   const authorName = isSystem
     ? "Civisto AI"
     : isAdmin
@@ -531,15 +613,15 @@ const CommentBubble = ({ comment }: { comment: ReportComment }) => {
 
   const RoleIcon = isSystem ? Bot : isAdmin ? ShieldCheck : UserCircle;
   const roleColor = isSystem
-    ? "text-blue-500"
+    ? "text-blue-500 dark:text-blue-400"
     : isAdmin
-      ? "text-green-600"
-      : "text-gray-500";
+      ? "text-green-600 dark:text-green-400"
+      : "text-gray-500 dark:text-gray-400";
   const bgColor = isSystem
-    ? "bg-blue-50 border-blue-100"
+    ? "bg-blue-50 border-blue-100 dark:bg-blue-950/40 dark:border-blue-900"
     : isAdmin
-      ? "bg-green-50 border-green-100"
-      : "bg-gray-50 border-gray-100";
+      ? "bg-green-50 border-green-100 dark:bg-green-950/40 dark:border-green-900"
+      : "bg-gray-50 border-gray-100 dark:bg-gray-800/50 dark:border-gray-700";
 
   return (
     <div className={`rounded-lg border p-3 ${bgColor}`}>
@@ -554,7 +636,7 @@ const CommentBubble = ({ comment }: { comment: ReportComment }) => {
             : ""}
         </span>
       </div>
-      <p className="text-sm leading-relaxed whitespace-pre-line">
+      <p className="text-sm leading-relaxed whitespace-pre-line text-foreground">
         {comment.content}
       </p>
     </div>
