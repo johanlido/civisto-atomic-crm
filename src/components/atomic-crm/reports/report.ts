@@ -1,4 +1,4 @@
-import type { Identifier, RaRecord } from "ra-core";
+import type { RaRecord } from "ra-core";
 
 /**
  * Report type matching the Civisto `crm_tickets` view.

@@ -43,11 +43,27 @@ export const ContactAside = ({ link = "edit" }: { link?: "edit" | "show" }) => {
           </SingleFieldList>
         </ArrayField>
 
-        {record.has_newsletter && (
-          <p className="pl-6 text-sm text-muted-foreground">
-            Subscribed to newsletter
-          </p>
-        )}
+        <div className="pl-6 text-sm text-muted-foreground">
+          <p>Nyhetsbrev: {record.has_newsletter ? "Aktiv" : "Ej aktiv"}</p>
+          {record.newsletter_subscribed_at ? (
+            <p>
+              Påbörjad:{" "}
+              <DateField
+                source="newsletter_subscribed_at"
+                options={{ year: "numeric", month: "long", day: "numeric" }}
+              />
+            </p>
+          ) : null}
+          {record.newsletter_unsubscribed_at ? (
+            <p>
+              Avslutad:{" "}
+              <DateField
+                source="newsletter_unsubscribed_at"
+                options={{ year: "numeric", month: "long", day: "numeric" }}
+              />
+            </p>
+          ) : null}
+        </div>
 
         {record.linkedin_url && (
           <PersonalInfoRow

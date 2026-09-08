@@ -20,6 +20,8 @@ export type ContactImportSchema = {
   first_seen: string;
   last_seen: string;
   has_newsletter: string;
+  newsletter_subscribed_at: string;
+  newsletter_unsubscribed_at: string;
   status: string;
   tags: string;
   linkedin_url: string;
@@ -100,6 +102,8 @@ export function useContactImport() {
             first_seen,
             last_seen,
             has_newsletter,
+            newsletter_subscribed_at,
+            newsletter_unsubscribed_at,
             status,
             company: companyName,
             tags: tagNames,
@@ -137,7 +141,13 @@ export function useContactImport() {
                 last_seen: last_seen
                   ? new Date(last_seen).toISOString()
                   : today,
-                has_newsletter,
+                has_newsletter: parseBoolean(has_newsletter),
+                newsletter_subscribed_at: newsletter_subscribed_at
+                  ? new Date(newsletter_subscribed_at).toISOString()
+                  : null,
+                newsletter_unsubscribed_at: newsletter_unsubscribed_at
+                  ? new Date(newsletter_unsubscribed_at).toISOString()
+                  : null,
                 status,
                 company_id: company?.id,
                 tags: tagList.map((tag) => tag.id),
@@ -198,6 +208,11 @@ const fetchRecordsWithCache = async function <T>(
     return acc;
   }, new Map<string, T>());
 };
+
+const parseBoolean = (value: string) =>
+  ["1", "true", "yes", "ja", "active", "aktiv"].includes(
+    value?.trim().toLowerCase(),
+  );
 
 const parseTags = (tags: string) =>
   tags

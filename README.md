@@ -65,6 +65,14 @@ If you need debug the backend, you can access the following services:
 2. [Importing And Exporting Data](./doc/src/content/docs/users/import-contacts.mdx)
 3. [Inbound Email](./doc/src/content/docs/users/inbound-email.mdx)
 
+## Civisto OVHCloud och MCP
+
+Civisto-versionen stödjer kommuner och samverkansaktörer som organisationer, spårbar nyhetsbrevsstatus på kontaktnivå samt ett autentiserat MCP-gränssnitt.
+
+1. [OVHCloud-deployment och fullständig datamigrering](./deploy/ovh/README.md)
+2. [CRM MCP Server](./mcp-server/README.md)
+3. [Datamodell och MCP-kontrakt](./docs/ovh-mcp-data-model.md)
+
 ## Deploying to Production
 
 1. [Configuring Supabase](./doc/src/content/docs/developers/supabase-configuration.mdx)

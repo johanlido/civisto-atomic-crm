@@ -1,0 +1,18 @@
+{
+    email {$ACME_EMAIL}
+}
+
+{$CRM_DOMAIN} {
+    encode zstd gzip
+    reverse_proxy frontend:80
+}
+
+{$API_DOMAIN} {
+    encode zstd gzip
+    reverse_proxy {$SUPABASE_GATEWAY_UPSTREAM}
+}
+
+{$MCP_DOMAIN} {
+    encode zstd gzip
+    reverse_proxy mcp:3000
+}

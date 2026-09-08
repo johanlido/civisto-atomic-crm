@@ -12,6 +12,7 @@ import { AsideSection } from "../misc/AsideSection";
 import { SaleName } from "../sales/SaleName";
 import type { Company } from "../types";
 import { sizes } from "./sizes";
+import { organizationTypeLabels } from "./organizationTypes";
 
 interface CompanyAsideProps {
   link?: string;
@@ -93,6 +94,19 @@ const ContextInfo = ({ record }: { record: Company }) => {
 
   return (
     <AsideSection title="Context">
+      <span>
+        Organisationstyp: {organizationTypeLabels[record.organization_type]}
+      </span>
+      {record.municipality_code && (
+        <span>
+          Kommunkod: <TextField source="municipality_code" />
+        </span>
+      )}
+      {record.organization_number && (
+        <span>
+          Organisationsnummer: <TextField source="organization_number" />
+        </span>
+      )}
       {record.sector && (
         <span>
           Sector: <TextField source="sector" />

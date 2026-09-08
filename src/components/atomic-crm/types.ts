@@ -51,6 +51,18 @@ export type Sale = {
 export type Company = {
   name: string;
   logo: RAFile;
+  organization_type:
+    | "municipality"
+    | "county_administrative_board"
+    | "government_agency"
+    | "region"
+    | "municipal_company"
+    | "nonprofit"
+    | "university"
+    | "private_company"
+    | "other";
+  municipality_code?: string | null;
+  organization_number?: string | null;
   sector: string;
   size: 1 | 10 | 50 | 250 | 500;
   linkedin_url: string;
@@ -92,6 +104,8 @@ export type Contact = {
   first_seen: string;
   last_seen: string;
   has_newsletter: boolean;
+  newsletter_subscribed_at?: string | null;
+  newsletter_unsubscribed_at?: string | null;
   tags: Identifier[];
   gender: string;
   sales_id: Identifier;
