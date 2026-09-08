@@ -10,6 +10,7 @@ import { RadioButtonGroupInput } from "@/components/admin/radio-button-group-inp
 import { SelectInput } from "@/components/admin/select-input";
 import { ArrayInput } from "@/components/admin/array-input";
 import { SimpleFormIterator } from "@/components/admin/simple-form-iterator";
+import { DateInput } from "@/components/admin/date-input";
 
 import { isLinkedinUrl } from "../misc/isLinkedInUrl";
 import { useConfigurationContext } from "../root/ConfigurationContext";
@@ -185,7 +186,21 @@ const ContactMiscInputs = () => {
         multiline
         helperText={false}
       />
-      <BooleanInput source="has_newsletter" helperText={false} />
+      <BooleanInput
+        source="has_newsletter"
+        label="Prenumererar på nyhetsbrev"
+        helperText={false}
+      />
+      <DateInput
+        source="newsletter_subscribed_at"
+        label="Prenumeration påbörjad"
+        helperText="Sätts automatiskt när prenumerationen aktiveras."
+      />
+      <DateInput
+        source="newsletter_unsubscribed_at"
+        label="Prenumeration avslutad"
+        helperText="Sätts automatiskt när prenumerationen avslutas."
+      />
       <ReferenceInput
         reference="sales"
         source="sales_id"

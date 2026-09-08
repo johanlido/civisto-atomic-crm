@@ -74,6 +74,7 @@ export const generateContacts = (db: Db, size = 500): Required<Contact>[] => {
 
     const first_seen = randomDate(new Date(company.created_at)).toISOString();
     const last_seen = first_seen;
+    const has_newsletter = weightedBoolean(30);
 
     return {
       id,
@@ -90,7 +91,9 @@ export const generateContacts = (db: Db, size = 500): Required<Contact>[] => {
       avatar,
       first_seen: first_seen,
       last_seen: last_seen,
-      has_newsletter: weightedBoolean(30),
+      has_newsletter,
+      newsletter_subscribed_at: has_newsletter ? first_seen : null,
+      newsletter_unsubscribed_at: null,
       status: random.arrayElement(defaultNoteStatuses).value,
       tags: random
         .arrayElements(db.tags, random.arrayElement([0, 0, 0, 1, 1, 2]))

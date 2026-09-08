@@ -285,9 +285,7 @@ export const ReportShow = ({
                   <span className="text-xs text-muted-foreground tracking-wide flex items-center gap-1">
                     <MapPin className="w-3 h-3" /> Address
                   </span>
-                  <span className="text-sm">
-                    {report.location_description}
-                  </span>
+                  <span className="text-sm">{report.location_description}</span>
                 </div>
               )}
             </div>
@@ -502,7 +500,9 @@ export const ReportShow = ({
                 size="sm"
                 variant="outline"
                 onClick={saveAdminNotes}
-                disabled={savingNotes || adminNotes === (report.admin_notes || "")}
+                disabled={
+                  savingNotes || adminNotes === (report.admin_notes || "")
+                }
                 className="mt-2 w-full"
               >
                 {savingNotes ? "Saving..." : "Save Notes"}
@@ -521,7 +521,6 @@ export const ReportShow = ({
 const CommentBubble = ({ comment }: { comment: ReportComment }) => {
   const isAdmin = comment.is_admin || comment.author_role === "admin";
   const isSystem = comment.is_system || comment.author_role === "system";
-  const isReporter = !isAdmin && !isSystem;
 
   const authorName = isSystem
     ? "Civisto AI"

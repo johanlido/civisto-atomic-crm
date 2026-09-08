@@ -12,6 +12,7 @@ import { isLinkedinUrl } from "../misc/isLinkedInUrl";
 import { useConfigurationContext } from "../root/ConfigurationContext";
 import type { Company, Sale } from "../types";
 import { sizes } from "./sizes";
+import { organizationTypes } from "./organizationTypes";
 
 const isUrl = (url: string) => {
   if (!url) return;
@@ -88,6 +89,24 @@ const CompanyContextInputs = () => {
   return (
     <div className="flex flex-col gap-4">
       <h6 className="text-lg font-semibold">Context</h6>
+      <SelectInput
+        source="organization_type"
+        label="Organisationstyp"
+        choices={organizationTypes}
+        defaultValue="private_company"
+        helperText={false}
+        validate={required()}
+      />
+      <TextInput
+        source="municipality_code"
+        label="Kommunkod"
+        helperText="Fyra siffror. Används endast för kommuner."
+      />
+      <TextInput
+        source="organization_number"
+        label="Organisationsnummer"
+        helperText={false}
+      />
       <SelectInput
         source="sector"
         choices={companySectors.map((sector) => ({

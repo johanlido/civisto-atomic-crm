@@ -1,0 +1,12 @@
+.git
+.github
+node_modules
+mcp-server/node_modules
+dist
+mcp-server/dist
+.env
+.env.*
+!.env.example
+*.log
+coverage
+terminal_full_output

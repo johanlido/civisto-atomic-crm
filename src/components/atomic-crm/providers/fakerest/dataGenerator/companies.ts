@@ -27,6 +27,9 @@ export const generateCompanies = (db: Db, size = 55): Required<Company>[] => {
         title: lorem.text(1),
         src: `./logos/${id}.png`,
       } as RAFile,
+      organization_type: "private_company",
+      municipality_code: null,
+      organization_number: null,
       sector: random.arrayElement(defaultCompanySectors),
       size: random.arrayElement(sizes) as 1 | 10 | 50 | 250 | 500,
       linkedin_url: `https://www.linkedin.com/company/${name

@@ -1,0 +1,71 @@
+name: civisto-crm
+
+services:
+  frontend:
+    build:
+      context: ../..
+      dockerfile: deploy/ovh/Dockerfile.frontend
+      args:
+        VITE_SUPABASE_URL: https://${API_DOMAIN}
+        VITE_SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
+        VITE_IS_DEMO: "false"
+        VITE_INBOUND_EMAIL: ${VITE_INBOUND_EMAIL:-}
+    restart: unless-stopped
+    expose:
+      - "80"
+    networks:
+      - civisto-edge
+
+  mcp:
+    build:
+      context: ../../mcp-server
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      HOST: 0.0.0.0
+      PORT: 3000
+      MCP_API_KEY: ${MCP_API_KEY}
+      MCP_ALLOWED_HOSTS: ${MCP_DOMAIN}
+      SUPABASE_URL: ${SUPABASE_INTERNAL_URL:-http://host.docker.internal:8000}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    expose:
+      - "3000"
+    networks:
+      - civisto-edge
+
+  caddy:
+    image: caddy:2.10-alpine
+    restart: unless-stopped
+    environment:
+      CRM_DOMAIN: ${CRM_DOMAIN}
+      API_DOMAIN: ${API_DOMAIN}
+      MCP_DOMAIN: ${MCP_DOMAIN}
+      ACME_EMAIL: ${ACME_EMAIL}
+      SUPABASE_GATEWAY_UPSTREAM: ${SUPABASE_GATEWAY_UPSTREAM:-host.docker.internal:8000}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      frontend:
+        condition: service_healthy
+      mcp:
+        condition: service_healthy
+    networks:
+      - civisto-edge
+
+networks:
+  civisto-edge:
+    name: civisto-edge
+
+volumes:
+  caddy_data:
+  caddy_config:

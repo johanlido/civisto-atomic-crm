@@ -1,4 +1,4 @@
-import { ListBase, Title, useListContext } from "ra-core";
+import { ListBase, useListContext } from "ra-core";
 import { useState } from "react";
 
 import type { Report } from "./report";
@@ -13,10 +13,7 @@ import { ReportShow } from "./ReportShow";
  */
 const ReportList = () => {
   return (
-    <ListBase
-      perPage={500}
-      sort={{ field: "created_at", order: "DESC" }}
-    >
+    <ListBase perPage={500} sort={{ field: "created_at", order: "DESC" }}>
       <ReportListLayout />
     </ListBase>
   );
@@ -46,7 +43,6 @@ const ReportListLayout = () => {
 
   return (
     <div>
-      <Title title="Tickets" />
       <div className="flex items-center justify-between mb-4">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Tickets</h2>
