@@ -1,4 +1,4 @@
-.PHONY: build help
+.PHONY: build help ensure-env
 
 help:
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
@@ -6,10 +6,14 @@ help:
 install: package.json ## install dependencies
 	npm install;
 
+ensure-env: ## copy env templates if local secret files are missing
+	@test -f .env.development || cp .env.example .env.development
+	@test -f supabase/functions/.env.development || cp supabase/functions/.env.example supabase/functions/.env.development
+
 start-supabase: ## start supabase locally
 	npx supabase start
 
-start-supabase-functions: ## start the supabase Functions watcher
+start-supabase-functions: ensure-env ## start the supabase Functions watcher
 	npx supabase functions serve --env-file supabase/functions/.env.development
 
 supabase-migrate-database: ## apply the migrations to the database
@@ -18,12 +22,12 @@ supabase-migrate-database: ## apply the migrations to the database
 supabase-reset-database: ## reset (and clear!) the database
 	npx supabase db reset
 
-start-app: ## start the app locally
+start-app: ensure-env ## start the app locally
 	npm run dev
 
 start: start-supabase start-app ## start the stack locally
 
-start-demo: ## start the app locally in demo mode
+start-demo: ensure-env ## start the app locally in demo mode
 	npm run dev:demo
 
 stop-supabase: ## stop local supabase

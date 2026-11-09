@@ -42,6 +42,15 @@ make install
 
 This will install the dependencies for the frontend and the backend, including a local Supabase instance.
 
+Secrets are read from environment variables (see `.env.example`). Copy the template if you want to edit values yourself:
+
+```sh
+cp .env.example .env.development
+cp supabase/functions/.env.example supabase/functions/.env.development
+```
+
+`make start` copies those templates automatically when the local files are missing. Never commit `.env`, `.env.development`, or other files that contain real keys.
+
 Once your app is configured, start the app locally with the following command:
 
 ```sh
